@@ -163,6 +163,22 @@ public class PotterBookStoreTest {
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
+    @Test
+    public void should_apply_appropriate_discount_when_buying_full_bundle_with_one_more_tome(){
+        Book bookArray[] = {
+                THE_PHILOSOPHER_S_STONE,
+                THE_CHAMBER_OF_SECRETS,
+                THE_CHAMBER_OF_SECRETS,
+                THE_PRISONER_OF_AZKABAN,
+                THE_ORDER_OF_THE_PHOENIX,
+                THE_GOBLET_OF_FIRE};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.ZERO
+                        .add(UNITARY_BOOK)
+                        .add(FULL_COLLECTION_BUNDLE)
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
     private BigDecimal calculateCartTotal(Book[] books) {
         BigDecimal cartTotal = BigDecimal.ZERO;
 
