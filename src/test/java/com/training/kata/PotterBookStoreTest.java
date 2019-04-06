@@ -179,6 +179,24 @@ public class PotterBookStoreTest {
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
+    @Test
+    public void should_apply_appropriate_discount_on_edge_case(){
+        Book bookArray[] = {
+                THE_PHILOSOPHER_S_STONE,
+                THE_PHILOSOPHER_S_STONE,
+                THE_CHAMBER_OF_SECRETS,
+                THE_CHAMBER_OF_SECRETS,
+                THE_PRISONER_OF_AZKABAN,
+                THE_PRISONER_OF_AZKABAN,
+                THE_GOBLET_OF_FIRE,
+                THE_ORDER_OF_THE_PHOENIX};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.ZERO
+                        .add(FOUR_BOOK_BUNDLE)
+                        .add(FOUR_BOOK_BUNDLE)
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
     private BigDecimal calculateCartTotal(Book[] books) {
         BigDecimal cartTotal = BigDecimal.ZERO;
 
@@ -187,35 +205,50 @@ public class PotterBookStoreTest {
         }
 
         if (books.length > 1) {
-            List<BookPack> bookPacks = new ArrayList<BookPack>();
-            for (int i = 0; i < books.length; i++) {
-                Book currentBook = books[i];
 
-                if (bookPacks.isEmpty()){
-                    BookPack bookPack = new BookPack();
-                    bookPack.addToPack(currentBook);
-                    bookPacks.add(bookPack);
-                } else {
-                    boolean hasBeenAdded = false;
-                    for (BookPack b : bookPacks){
-                        if (b.doesNotContain(currentBook)){
-                            b.addToPack(currentBook);
-                            hasBeenAdded = true;
-                            break;
-                        }
-                    }
-                    if (!hasBeenAdded){
-                        BookPack bookPack = new BookPack();
-                        bookPack.addToPack(currentBook);
-                        bookPacks.add(bookPack);
-                    }
-                }
-            }
-            for (int i = 0; i < bookPacks.size(); i++) {
-                cartTotal = cartTotal.add(bookPacks.get(i).getPackPrice());
-            }
+            cartTotal = getBookPackPrice(getBookPacks(books, 5))
+                    .min(getBookPackPrice(getBookPacks(books, 4)))
+                    .min(getBookPackPrice(getBookPacks(books, 3)))
+                    .min(getBookPackPrice(getBookPacks(books, 2)));
         }
 
         return cartTotal.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    private BigDecimal getBookPackPrice(List<BookPack> regularBookPacks) {
+        BigDecimal regularBookPacksPrice;
+        regularBookPacksPrice = BigDecimal.ZERO;
+        for (int i = 0; i < regularBookPacks.size(); i++) {
+            regularBookPacksPrice = regularBookPacksPrice.add(regularBookPacks.get(i).getPackPrice());
+        }
+        return regularBookPacksPrice;
+    }
+
+    private List<BookPack> getBookPacks(Book[] books, int maxBundleSize) {
+        List<BookPack> bookPacks = new ArrayList<BookPack>();
+        for (int i = 0; i < books.length; i++) {
+            Book currentBook = books[i];
+
+            if (bookPacks.isEmpty()){
+                BookPack bookPack = new BookPack(maxBundleSize);
+                bookPack.addToPack(currentBook);
+                bookPacks.add(bookPack);
+            } else {
+                boolean hasBeenAdded = false;
+                for (BookPack b : bookPacks){
+                    if (b.doesNotContain(currentBook) && b.isNotFull()){
+                        b.addToPack(currentBook);
+                        hasBeenAdded = true;
+                        break;
+                    }
+                }
+                if (!hasBeenAdded){
+                    BookPack bookPack = new BookPack(maxBundleSize);
+                    bookPack.addToPack(currentBook);
+                    bookPacks.add(bookPack);
+                }
+            }
+        }
+        return bookPacks;
     }
 }

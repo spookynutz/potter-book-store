@@ -9,6 +9,11 @@ import java.util.Set;
 public class BookPack {
 
     private Set<Book> bookPack = new HashSet<Book>();
+    private int bookPackMaxSize;
+
+    public BookPack(int maxSize) {
+        this.bookPackMaxSize = maxSize;
+    }
 
 
     public void addToPack(Book book) {
@@ -44,5 +49,9 @@ public class BookPack {
 
     public boolean doesNotContain(Book currentBook) {
         return !bookPack.contains(currentBook);
+    }
+
+    public boolean isNotFull() {
+        return bookPack.size() < bookPackMaxSize;
     }
 }
