@@ -105,6 +105,20 @@ public class PotterBookStoreTest {
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
+    @Test
+    public void should_apply_appropriate_discount_when_buying_three_books_with_two_identical_ones(){
+        Book bookArray[] = {
+                THE_PHILOSOPHER_S_STONE,
+                THE_PHILOSOPHER_S_STONE,
+                THE_CHAMBER_OF_SECRETS};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8)
+                        .multiply(BigDecimal.valueOf(2))
+                        .multiply(BigDecimal.valueOf(0.95))
+                        .add(BigDecimal.valueOf(8))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
     private BigDecimal calculateCartTotal(Book[] books) {
         BigDecimal cartTotal = BigDecimal.ZERO;
 
