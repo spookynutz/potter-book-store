@@ -32,6 +32,7 @@ public class BookPack {
             put(2, BigDecimal.valueOf(0.95));
             put(3, BigDecimal.valueOf(0.90));
             put(4, BigDecimal.valueOf(0.80));
+            put(5, BigDecimal.valueOf(0.75));
         }};
 
         if (promotionMap.containsKey(size)) {
