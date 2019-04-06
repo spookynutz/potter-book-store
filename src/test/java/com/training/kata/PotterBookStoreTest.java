@@ -85,6 +85,16 @@ public class PotterBookStoreTest {
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
+    @Test
+    public void should_apply_a_20_percent_discount_when_buying_four_different_books(){
+        Book bookArray[] = {THE_PHILOSOPHER_S_STONE, THE_CHAMBER_OF_SECRETS, THE_PRISONER_OF_AZKABAN, THE_GOBLET_OF_FIRE};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
+                        .multiply(BigDecimal.valueOf(4))
+                        .multiply(BigDecimal.valueOf(0.80))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
     private BigDecimal calculateCartTotal(Book[] books) {
         BigDecimal cartTotal = BigDecimal.ZERO;
 

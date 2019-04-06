@@ -31,6 +31,7 @@ public class BookPack {
         HashMap<Integer, BigDecimal> promotionMap = new HashMap<Integer, BigDecimal>(){{
             put(2, BigDecimal.valueOf(0.95));
             put(3, BigDecimal.valueOf(0.90));
+            put(4, BigDecimal.valueOf(0.80));
         }};
 
         if (promotionMap.containsKey(size)) {
