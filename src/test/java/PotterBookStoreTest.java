@@ -8,11 +8,11 @@ public class PotterBookStoreTest {
 
     @Test
     public void should_bill_8_euros_for_a_single_book(){
-        addBookToCart("Harry Potter : The Philosopher's Stone");
+        addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
         assertThat(calculateCartTotal()).isEqualTo(BigDecimal.valueOf(8.00));
     }
 
-    private void addBookToCart(String bookname) {
+    private void addBookToCart(HarryPotterBooks bookname) {
 
     }
 
