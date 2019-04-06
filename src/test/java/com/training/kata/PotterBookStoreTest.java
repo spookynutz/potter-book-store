@@ -16,16 +16,32 @@ public class PotterBookStoreTest {
     private List<Book> bookCart = new ArrayList<Book>();
 
     @Test
-    public void should_bill_8_euros_for_a_single_book(){
+    public void should_charge_unitary_price_for_a_single_book(){
         addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
-        assertThat(calculateCartTotal()).isEqualTo(UNITARY_BOOK_PRICE);
+        assertThat(calculateCartTotal()).isEqualTo(
+                UNITARY_BOOK_PRICE
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
-    public void should_bill_16_euros_if_we_purchase_the_same_book_twice(){
+    public void should_charge_twice_the_unitary_price_if_we_purchase_the_same_book_twice(){
         addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
         addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
-        assertThat(calculateCartTotal()).isEqualTo(UNITARY_BOOK_PRICE.multiply(BigDecimal.valueOf(2)));
+        assertThat(calculateCartTotal()).isEqualTo(
+                UNITARY_BOOK_PRICE
+                        .multiply(BigDecimal.valueOf(2))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    @Test
+    public void should_apply_a_5_percent_discount_when_buying_two_different_books(){
+        addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
+        addBookToCart(HarryPotterBooks.THE_CHAMBER_OF_SECRETS);
+        assertThat(calculateCartTotal()).isEqualTo(
+                UNITARY_BOOK_PRICE
+                        .multiply(BigDecimal.valueOf(2))
+                        .multiply(BigDecimal.valueOf(0.95))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     private void addBookToCart(Book book) {
@@ -33,6 +49,8 @@ public class PotterBookStoreTest {
     }
 
     private BigDecimal calculateCartTotal() {
-        return UNITARY_BOOK_PRICE.multiply(BigDecimal.valueOf(bookCart.size()));
+        return UNITARY_BOOK_PRICE
+                .multiply(BigDecimal.valueOf(bookCart.size()))
+                .setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 }
