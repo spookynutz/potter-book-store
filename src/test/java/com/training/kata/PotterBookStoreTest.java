@@ -197,6 +197,42 @@ public class PotterBookStoreTest {
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
+    @Test
+    public void should_apply_appropriate_discount_on_second_edge_case(){
+        Book bookArray[] = {
+                THE_PHILOSOPHER_S_STONE,
+                THE_PHILOSOPHER_S_STONE,
+                THE_PHILOSOPHER_S_STONE,
+                THE_PHILOSOPHER_S_STONE,
+                THE_PHILOSOPHER_S_STONE,
+                THE_CHAMBER_OF_SECRETS,
+                THE_CHAMBER_OF_SECRETS,
+                THE_CHAMBER_OF_SECRETS,
+                THE_CHAMBER_OF_SECRETS,
+                THE_CHAMBER_OF_SECRETS,
+                THE_PRISONER_OF_AZKABAN,
+                THE_PRISONER_OF_AZKABAN,
+                THE_PRISONER_OF_AZKABAN,
+                THE_PRISONER_OF_AZKABAN,
+                THE_GOBLET_OF_FIRE,
+                THE_GOBLET_OF_FIRE,
+                THE_GOBLET_OF_FIRE,
+                THE_GOBLET_OF_FIRE,
+                THE_GOBLET_OF_FIRE,
+                THE_ORDER_OF_THE_PHOENIX,
+                THE_ORDER_OF_THE_PHOENIX,
+                THE_ORDER_OF_THE_PHOENIX,
+                THE_ORDER_OF_THE_PHOENIX};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.ZERO
+                        .add(FULL_COLLECTION_BUNDLE)
+                        .add(FULL_COLLECTION_BUNDLE)
+                        .add(FULL_COLLECTION_BUNDLE)
+                        .add(FOUR_BOOK_BUNDLE)
+                        .add(FOUR_BOOK_BUNDLE)
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
     private BigDecimal calculateCartTotal(Book[] books) {
         BigDecimal cartTotal = BigDecimal.ZERO;
 
@@ -215,13 +251,13 @@ public class PotterBookStoreTest {
         return cartTotal.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    private BigDecimal getBookPackPrice(List<BookPack> regularBookPacks) {
-        BigDecimal regularBookPacksPrice;
-        regularBookPacksPrice = BigDecimal.ZERO;
-        for (int i = 0; i < regularBookPacks.size(); i++) {
-            regularBookPacksPrice = regularBookPacksPrice.add(regularBookPacks.get(i).getPackPrice());
+    private BigDecimal getBookPackPrice(List<BookPack> bookPacks) {
+        BigDecimal bookPacksPrice = BigDecimal.ZERO;
+        for (int i = 0; i < bookPacks.size(); i++) {
+            bookPacksPrice = bookPacksPrice.add(bookPacks.get(i).getPackPrice());
         }
-        return regularBookPacksPrice;
+        System.out.println(bookPacksPrice);
+        return bookPacksPrice;
     }
 
     private List<BookPack> getBookPacks(Book[] books, int maxBundleSize) {
