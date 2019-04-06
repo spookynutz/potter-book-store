@@ -30,8 +30,14 @@ public class BookPack {
     private BigDecimal getPromotion(int size) {
         HashMap<Integer, BigDecimal> promotionMap = new HashMap<Integer, BigDecimal>(){{
             put(2, BigDecimal.valueOf(0.95));
+            put(3, BigDecimal.valueOf(0.90));
         }};
-        return promotionMap.get(size);
+
+        if (promotionMap.containsKey(size)) {
+            return promotionMap.get(size);
+        } else {
+            return BigDecimal.valueOf(90000);
+        }
     }
 
     public boolean doesNotContain(Book currentBook) {

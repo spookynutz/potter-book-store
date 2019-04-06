@@ -4,9 +4,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.training.kata.HarryPotterBooks.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,6 +72,16 @@ public class PotterBookStoreTest {
                 BigDecimal.valueOf(8.00)
                         .multiply(BigDecimal.valueOf(2))
                         .multiply(BigDecimal.valueOf(0.95))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    @Test
+    public void should_apply_a_10_percent_discount_when_buying_three_different_books(){
+        Book bookArray[] = {THE_PHILOSOPHER_S_STONE, THE_CHAMBER_OF_SECRETS, THE_PRISONER_OF_AZKABAN};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
+                        .multiply(BigDecimal.valueOf(3))
+                        .multiply(BigDecimal.valueOf(0.90))
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
