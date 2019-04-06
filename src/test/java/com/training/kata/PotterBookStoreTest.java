@@ -1,56 +1,119 @@
 package com.training.kata;
 
-import com.training.kata.Book;
-import com.training.kata.HarryPotterBooks;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static com.training.kata.HarryPotterBooks.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PotterBookStoreTest {
 
-    public static final BigDecimal UNITARY_BOOK_PRICE = BigDecimal.valueOf(8.00);
-    private List<Book> bookCart = new ArrayList<Book>();
+    @Test
+    public void should_charge_0_for_empty_cart(){
+        assertThat(calculateCartTotal(new Book[]{})).isEqualTo(BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
 
     @Test
-    public void should_charge_unitary_price_for_a_single_book(){
-        addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
-        assertThat(calculateCartTotal()).isEqualTo(
-                UNITARY_BOOK_PRICE
+    public void should_charge_unitary_price_for_first_book(){
+        Book bookArray[] = {THE_PHILOSOPHER_S_STONE};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
-    public void should_charge_twice_the_unitary_price_if_we_purchase_the_same_book_twice(){
-        addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
-        addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
-        assertThat(calculateCartTotal()).isEqualTo(
-                UNITARY_BOOK_PRICE
-                        .multiply(BigDecimal.valueOf(2))
+    public void should_charge_unitary_price_for_second_book(){
+        Book bookArray[] = {THE_CHAMBER_OF_SECRETS};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
-    public void should_apply_a_5_percent_discount_when_buying_two_different_books(){
-        addBookToCart(HarryPotterBooks.THE_PHILOSOPHER_S_STONE);
-        addBookToCart(HarryPotterBooks.THE_CHAMBER_OF_SECRETS);
-        assertThat(calculateCartTotal()).isEqualTo(
-                UNITARY_BOOK_PRICE
-                        .multiply(BigDecimal.valueOf(2))
-                        .multiply(BigDecimal.valueOf(0.95))
+    public void should_charge_unitary_price_for_third_book(){
+        Book bookArray[] = {THE_PRISONER_OF_AZKABAN};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-    private void addBookToCart(Book book) {
-        bookCart.add(book);
+    @Test
+    public void should_charge_unitary_price_for_fourth_book(){
+        Book bookArray[] = {THE_GOBLET_OF_FIRE};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-    private BigDecimal calculateCartTotal() {
-        return UNITARY_BOOK_PRICE
-                .multiply(BigDecimal.valueOf(bookCart.size()))
-                .setScale(2, BigDecimal.ROUND_HALF_UP);
+    @Test
+    public void should_charge_unitary_price_for_fifth_book(){
+        Book bookArray[] = {THE_ORDER_OF_THE_PHOENIX};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    @Test
+    public void should_charge_three_times_the_unitary_price_if_we_purchase_the_same_book_three_times(){
+        Book bookArray[] = {THE_PHILOSOPHER_S_STONE, THE_PHILOSOPHER_S_STONE, THE_PHILOSOPHER_S_STONE};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
+                        .multiply(BigDecimal.valueOf(3))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+//    @Test
+//    public void should_apply_a_5_percent_discount_when_buying_two_different_books(){
+//        Book bookArray[] = {THE_PHILOSOPHER_S_STONE, THE_CHAMBER_OF_SECRETS};
+//        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+//                BigDecimal.valueOf(8.00)
+//                        .multiply(BigDecimal.valueOf(2))
+//                        .multiply(BigDecimal.valueOf(0.95))
+//                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+//    }
+
+    private BigDecimal calculateCartTotal(Book[] books) {
+        BigDecimal cartTotal = BigDecimal.ZERO;
+
+        if (books.length == 1){
+            cartTotal = BigDecimal.valueOf(8.00);
+        }
+
+        if (books.length > 1) {
+            List<BookPack> bookPacks = new ArrayList<BookPack>();
+            for (int i = 0; i < books.length; i++) {
+                Book currentBook = books[i];
+
+                if (bookPacks.isEmpty()){
+                    BookPack bookPack = new BookPack();
+                    bookPack.addToPack(currentBook);
+                    bookPacks.add(bookPack);
+                } else {
+                    boolean hasBeenAdded = false;
+                    for (BookPack b : bookPacks){
+                        if (b.doesNotContain(currentBook)){
+                            b.addToPack(currentBook);
+                            hasBeenAdded = true;
+                            break;
+                        }
+                    }
+                    if (!hasBeenAdded){
+                        BookPack bookPack = new BookPack();
+                        bookPack.addToPack(currentBook);
+                        bookPacks.add(bookPack);
+                    }
+                }
+            }
+            for (int i = 0; i < bookPacks.size(); i++) {
+                cartTotal = cartTotal.add(bookPacks.get(i).getPackPrice());
+            }
+        }
+
+        return cartTotal.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 }
