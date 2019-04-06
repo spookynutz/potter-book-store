@@ -67,15 +67,15 @@ public class PotterBookStoreTest {
                         .setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-//    @Test
-//    public void should_apply_a_5_percent_discount_when_buying_two_different_books(){
-//        Book bookArray[] = {THE_PHILOSOPHER_S_STONE, THE_CHAMBER_OF_SECRETS};
-//        assertThat(calculateCartTotal(bookArray)).isEqualTo(
-//                BigDecimal.valueOf(8.00)
-//                        .multiply(BigDecimal.valueOf(2))
-//                        .multiply(BigDecimal.valueOf(0.95))
-//                        .setScale(2, BigDecimal.ROUND_HALF_UP));
-//    }
+    @Test
+    public void should_apply_a_5_percent_discount_when_buying_two_different_books(){
+        Book bookArray[] = {THE_PHILOSOPHER_S_STONE, THE_CHAMBER_OF_SECRETS};
+        assertThat(calculateCartTotal(bookArray)).isEqualTo(
+                BigDecimal.valueOf(8.00)
+                        .multiply(BigDecimal.valueOf(2))
+                        .multiply(BigDecimal.valueOf(0.95))
+                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
 
     private BigDecimal calculateCartTotal(Book[] books) {
         BigDecimal cartTotal = BigDecimal.ZERO;
