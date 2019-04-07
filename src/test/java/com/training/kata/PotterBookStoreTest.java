@@ -238,15 +238,12 @@ public class PotterBookStoreTest {
         BigDecimal cartTotal = BigDecimal.ZERO;
 
         if (books.length == 1){
-            cartTotal = BigDecimal.valueOf(8.00);
+            cartTotal = UNITARY_BOOK;
         }
 
         if (books.length > 1) {
 
-            cartTotal = getBookPackPrice(getBookPacks(books, 5))
-                    .min(getBookPackPrice(getBookPacks(books, 4)))
-                    .min(getBookPackPrice(getBookPacks(books, 3)))
-                    .min(getBookPackPrice(getBookPacks(books, 2)));
+            cartTotal = getBookPackPrice(getBookPacks(books));
         }
 
         return cartTotal.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -259,12 +256,12 @@ public class PotterBookStoreTest {
             bookPacksPrice = bookPacksPrice.add(bookPacks.get(i).price());
         }
 
-        bookPacksPrice = handleSecondEdgeCase(bookPacks, bookPacksPrice);
+        bookPacksPrice = handleEdgeCase(bookPacks, bookPacksPrice);
 
         return bookPacksPrice;
     }
 
-    private BigDecimal handleSecondEdgeCase(List<BookPack> bookPacks, BigDecimal bookPacksPrice) {
+    private BigDecimal handleEdgeCase(List<BookPack> bookPacks, BigDecimal bookPacksPrice) {
         int numberOfBundlesOfThree = 0;
         int numberOfFullBundles = 0;
         for (int i = 0; i < bookPacks.size(); i++) {
@@ -277,18 +274,18 @@ public class PotterBookStoreTest {
         int numbersToSwitch = Math.min(numberOfBundlesOfThree, numberOfFullBundles);
         bookPacksPrice = bookPacksPrice
                 .subtract(
-                        BigDecimal.valueOf(8.00)
+                        UNITARY_BOOK
                                 .multiply(BigDecimal.valueOf(5))
                                 .multiply(BigDecimal.valueOf(0.75))
                                 .multiply(BigDecimal.valueOf(numbersToSwitch)))
                 .subtract(
-                        BigDecimal.valueOf(8.00)
+                        UNITARY_BOOK
                                 .multiply(BigDecimal.valueOf(3))
                                 .multiply(BigDecimal.valueOf(0.90))
                                 .multiply(BigDecimal.valueOf(numbersToSwitch))
                 )
                 .add(
-                        BigDecimal.valueOf(8.00)
+                        UNITARY_BOOK
                                 .multiply(BigDecimal.valueOf(4))
                                 .multiply(BigDecimal.valueOf(0.80))
                                 .multiply(BigDecimal.valueOf(numbersToSwitch * 2))
@@ -297,26 +294,26 @@ public class PotterBookStoreTest {
         return bookPacksPrice;
     }
 
-    private List<BookPack> getBookPacks(Book[] books, int maxBundleSize) {
+    private List<BookPack> getBookPacks(Book[] books) {
         List<BookPack> bookPacks = new ArrayList<BookPack>();
         for (int i = 0; i < books.length; i++) {
             Book currentBook = books[i];
 
             if (bookPacks.isEmpty()){
-                BookPack bookPack = new BookPack(maxBundleSize);
+                BookPack bookPack = new BookPack();
                 bookPack.addToPack(currentBook);
                 bookPacks.add(bookPack);
             } else {
                 boolean hasBeenAdded = false;
                 for (int j = 0; j < bookPacks.size(); j++) {
                     BookPack bookPack = bookPacks.get(j);
-                    if (!hasBeenAdded && bookPack.doesNotContain(currentBook) && bookPack.isNotFull()) {
+                    if (!hasBeenAdded && bookPack.doesNotContain(currentBook)) {
                         bookPack.addToPack(currentBook);
                         hasBeenAdded = true;
                     }
                 }
                 if (!hasBeenAdded){
-                    BookPack bookPack = new BookPack(maxBundleSize);
+                    BookPack bookPack = new BookPack();
                     bookPack.addToPack(currentBook);
                     bookPacks.add(bookPack);
                 }
