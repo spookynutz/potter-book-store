@@ -271,11 +271,11 @@ public class PotterBookStoreTest {
                 bookPacks.add(bookPack);
             } else {
                 boolean hasBeenAdded = false;
-                for (BookPack b : bookPacks){
-                    if (b.doesNotContain(currentBook) && b.isNotFull()){
-                        b.addToPack(currentBook);
+                for (int j = 0; j < bookPacks.size(); j++) {
+                    BookPack bookPack = bookPacks.get(j);
+                    if (!hasBeenAdded && bookPack.doesNotContain(currentBook) && bookPack.isNotFull()) {
+                        bookPack.addToPack(currentBook);
                         hasBeenAdded = true;
-                        break;
                     }
                 }
                 if (!hasBeenAdded){
