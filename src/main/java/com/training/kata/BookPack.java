@@ -20,7 +20,7 @@ public class BookPack {
         bookPack.add(book);
     }
 
-    public BigDecimal getPackPrice() {
+    public BigDecimal price() {
 
         if (bookPack.size() == 1){
             return BigDecimal.valueOf(8.00);
@@ -53,5 +53,9 @@ public class BookPack {
 
     public boolean isNotFull() {
         return bookPack.size() < bookPackMaxSize;
+    }
+
+    public int size() {
+        return this.bookPack.size();
     }
 }

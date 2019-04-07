@@ -3,6 +3,7 @@ package com.training.kata;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -253,10 +254,46 @@ public class PotterBookStoreTest {
 
     private BigDecimal getBookPackPrice(List<BookPack> bookPacks) {
         BigDecimal bookPacksPrice = BigDecimal.ZERO;
+
         for (int i = 0; i < bookPacks.size(); i++) {
-            bookPacksPrice = bookPacksPrice.add(bookPacks.get(i).getPackPrice());
+            bookPacksPrice = bookPacksPrice.add(bookPacks.get(i).price());
         }
-        System.out.println(bookPacksPrice);
+
+        bookPacksPrice = handleSecondEdgeCase(bookPacks, bookPacksPrice);
+
+        return bookPacksPrice;
+    }
+
+    private BigDecimal handleSecondEdgeCase(List<BookPack> bookPacks, BigDecimal bookPacksPrice) {
+        int numberOfBundlesOfThree = 0;
+        int numberOfFullBundles = 0;
+        for (int i = 0; i < bookPacks.size(); i++) {
+            if (bookPacks.get(i).size() == 3){
+                numberOfBundlesOfThree++;
+            } else if (bookPacks.get(i).size() == 5){
+                numberOfFullBundles++;
+            }
+        }
+        int numbersToSwitch = Math.min(numberOfBundlesOfThree, numberOfFullBundles);
+        bookPacksPrice = bookPacksPrice
+                .subtract(
+                        BigDecimal.valueOf(8.00)
+                                .multiply(BigDecimal.valueOf(5))
+                                .multiply(BigDecimal.valueOf(0.75))
+                                .multiply(BigDecimal.valueOf(numbersToSwitch)))
+                .subtract(
+                        BigDecimal.valueOf(8.00)
+                                .multiply(BigDecimal.valueOf(3))
+                                .multiply(BigDecimal.valueOf(0.90))
+                                .multiply(BigDecimal.valueOf(numbersToSwitch))
+                )
+                .add(
+                        BigDecimal.valueOf(8.00)
+                                .multiply(BigDecimal.valueOf(4))
+                                .multiply(BigDecimal.valueOf(0.80))
+                                .multiply(BigDecimal.valueOf(numbersToSwitch * 2))
+                )
+                .setScale(2, RoundingMode.HALF_UP);
         return bookPacksPrice;
     }
 
